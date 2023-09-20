@@ -6,7 +6,9 @@ from fastapi.responses import JSONResponse
 app = FastAPI()
 
 
-def check_permission(auth):
+def check_permission(method, path, auth):
+    if method == "GET" and path == "_healthcheck":
+        return True
     # Basic認証は Basic eurarear= みたいな文字列がAuthenticationに入る
     # BASE64エンコードされる仕様
     # Authenticationヘッダが万が一空の場合はスペースに置換して、それをsplitで1回だけ分割
@@ -27,7 +29,7 @@ async def check_authentication(request: Request, call_next):
     # Basic認証の場合、Authorizationヘッダに入力されたユーザー名とパスワードが入ってくること
     auth = request.headers.get("Authorization")
     # 認証不可の場合、Basic認証をブラウザに要求するレスポンスヘッダを返す
-    if not check_permission(auth):
+    if not check_permission(request.method, request.url.path, auth):
         return JSONResponse(None, 401, {"WWW-Authenticate": "Basic"})
     # 認証OKだったら、エンドポイントの処理を実行
     return await call_next(request)
