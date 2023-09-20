@@ -10,5 +10,6 @@ VSCodeで本プロジェクトを開いたら、ターミナルより以下の�
 - `asdf plugin-add poetry`
 - `asdf install`
 - `poetry config virtualenvs.in-project true`
+- `poetry install`
 - `poetry shell`
-- `python run.py`
+- `uvicorn main:app --reload`
