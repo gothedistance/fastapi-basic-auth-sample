@@ -7,7 +7,7 @@ app = FastAPI()
 
 
 def check_permission(method, path, auth):
-    if method == "GET" and path == "_healthcheck":
+    if method == "GET" and path == "/_healthcheck":
         return True
     # Basic認証は Basic eurarear= みたいな文字列がAuthenticationに入る
     # BASE64エンコードされる仕様
@@ -33,6 +33,11 @@ async def check_authentication(request: Request, call_next):
         return JSONResponse(None, 401, {"WWW-Authenticate": "Basic"})
     # 認証OKだったら、エンドポイントの処理を実行
     return await call_next(request)
+
+
+@app.get("/_healthcheck")
+def healthcheck():
+    return {"message": "Hello World"}
 
 
 @app.get("/test")
